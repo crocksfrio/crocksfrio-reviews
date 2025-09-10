@@ -174,11 +174,16 @@
         </div>
 
         <div id="feedback-text" class="text-gray-600 mt-6 hidden fade-in">
-            Agradecemos o seu feedback. Lamentamos que sua experiência não tenha atendido aos mais altos padrões dentro das suas expectativas. Sua opinião é muito importante para nós e será usada para aprimorarmos nossos serviços. Gostaríamos de entender melhor o que aconteceu para podermos corrigir a situação.
+            Agradecemos o seu feedback. Lamentamos que sua experi&ecirc;ncia n&atilde;o tenha atendido aos mais altos padr&otilde;es dentro da sua expectativas. Sua opini&atilde;o &eacute; muito importante para n&oacute;s e ser&aacute; usada para aprimorarmos nossos servi&ccedil;os. Gostar&iacute;amos de entender melhor o que aconteceu para podermos corrigir a situa&ccedil;&atilde;o.
         </div>
 
         <div id="feedback-form" class="form-container">
-            <form id="contact-form">
+            <!--
+            IMPORTANTE: Para fazer o formulário funcionar, você precisa se registrar no Formspree (gratuito)
+            e substituir 'your_form_id' pela sua ID de formulário.
+            Mais informações abaixo.
+            -->
+            <form id="contact-form" action="https://formspree.io/f/mzzaogwd" method="POST">
                 <div class="input-group">
                     <label for="name">Nome</label>
                     <input type="text" id="name" name="name" class="rounded-lg">
@@ -191,21 +196,21 @@
                     <label for="comment">Comentário</label>
                     <textarea id="comment" name="comment" rows="4" class="rounded-lg"></textarea>
                 </div>
+                <button type="submit" class="submit-btn mt-6 w-full">Enviar</button>
             </form>
         </div>
 
-        <button id="submit-btn" class="submit-btn mt-6">Enviar</button>
+        <button id="submit-btn-5-stars" class="submit-btn mt-6">Enviar</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const starInputs = document.querySelectorAll('input[name="rating"]');
-            const feedbackForm = document.getElementById('feedback-form');
+            const feedbackFormContainer = document.getElementById('feedback-form');
             const feedbackText = document.getElementById('feedback-text');
-            const submitBtn = document.getElementById('submit-btn');
+            const submitBtn5Stars = document.getElementById('submit-btn-5-stars');
             const starsValue = document.getElementById('stars-value');
 
-            // Set initial state
             let currentRating = 5;
 
             // Handle rating change
@@ -221,52 +226,20 @@
                 if (currentRating < 5) {
                     feedbackText.classList.remove('hidden');
                     feedbackText.classList.add('fade-in');
-                    feedbackForm.classList.add('active', 'fade-in');
+                    feedbackFormContainer.classList.add('active', 'fade-in');
+                    submitBtn5Stars.classList.add('hidden');
                 } else {
                     feedbackText.classList.add('hidden');
-                    feedbackForm.classList.remove('active', 'fade-in');
+                    feedbackFormContainer.classList.remove('active', 'fade-in');
+                    submitBtn5Stars.classList.remove('hidden');
                 }
             }
 
-            // Handle button click
-            submitBtn.addEventListener('click', () => {
-                if (currentRating === 5) {
-                    // Redirect for 5 stars
-                    window.location.href = "https://tr.ee/namLQs";
-                } else {
-                    // Handle form submission for 1-4 stars
-                    const form = document.getElementById('contact-form');
-                    const formData = new FormData(form);
-                    const nome = formData.get('name');
-                    const telefone = formData.get('phone');
-                    const comentario = formData.get('comment');
-                    const estrelas = currentRating;
-
-                    // Construir a mensagem para o WhatsApp
-                    let message = '';
-                    if (nome || telefone) {
-                        message += `Feedback do cliente:\n`;
-                        if (nome) message += `Nome: ${nome}\n`;
-                        if (telefone) message += `Telefone: ${telefone}\n`;
-                        message += `\n`;
-                    }
-                    if (comentario) message += comentario;
-
-                    // Codificar a mensagem para URL
-                    const encodedMessage = encodeURIComponent(message);
-                    const whatsappUrl = `https://api.whatsapp.com/send?phone=5581995140539&text=${encodedMessage}`;
-                    
-                    // Redirecionar para o WhatsApp
-                    window.location.href = whatsappUrl;
-
-                    // Limpar formulário após envio
-                    form.reset();
-                    document.getElementById('star5').checked = true;
-                    currentRating = 5;
-                    starsValue.textContent = '5';
-                    updateUI();
-                }
+            // Handle 5-star button click
+            submitBtn5Stars.addEventListener('click', () => {
+                window.location.href = "https://tr.ee/namLQs";
             });
+
             // Initial UI update on page load
             updateUI();
         });
