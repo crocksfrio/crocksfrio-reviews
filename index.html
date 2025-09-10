@@ -144,13 +144,81 @@
                 padding: 1.5rem 1rem;
             }
         }
+
+        /* Estilos do Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-message {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .modal-btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-btn-google {
+            background-color: #4285F4;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modal-btn-google:hover {
+            background-color: #357ae8;
+        }
+
+        .modal-btn:hover {
+            background-color: #43a047;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="container rounded-3xl shadow-lg">
-        <!-- Logo placeholder -->
+        <!-- Logo -->
         <div class="mb-2">
-            <img src="https://placehold.co/800x800/6b7280/FFFFFF?text=Seu+Logo" alt="Logotipo da Empresa" class="mx-auto rounded-full w-28 h-28 object-cover">
+            <img src="logo.png" alt="Logotipo da Empresa" class="mx-auto rounded-full w-28 h-28 object-cover">
         </div>
         <div class="mb-6 font-inter text-center">
             <p class="text-xl font-semibold text-gray-800">Crocks Frio</p>
@@ -159,7 +227,7 @@
         <h1 class="text-3xl font-bold mb-4 text-gray-800">Avalie-nos</h1>
         <div class="flex items-center justify-center gap-2 mt-4">
             <div class="star-rating">
-                <input type="radio" id="star5" name="rating" value="5" checked>
+                <input type="radio" id="star5" name="rating" value="5">
                 <label for="star5" title="5 estrelas">&#9733;</label>
                 <input type="radio" id="star4" name="rating" value="4">
                 <label for="star4" title="4 estrelas">&#9733;</label>
@@ -170,7 +238,7 @@
                 <input type="radio" id="star1" name="rating" value="1">
                 <label for="star1" title="1 estrela">&#9733;</label>
             </div>
-            <span id="stars-value" class="stars-value">5</span>
+            <span id="stars-value" class="stars-value"></span>
         </div>
 
         <div id="feedback-text" class="text-gray-600 mt-6 hidden fade-in">
@@ -186,21 +254,35 @@
             <form id="contact-form" action="https://formspree.io/f/mzzaogwd" method="POST">
                 <div class="input-group">
                     <label for="name">Nome</label>
-                    <input type="text" id="name" name="name" class="rounded-lg">
+                    <input type="text" id="name" name="name" class="rounded-lg" required>
                 </div>
                 <div class="input-group">
                     <label for="phone">Telefone</label>
-                    <input type="tel" id="phone" name="phone" class="rounded-lg">
+                    <input type="tel" id="phone" name="phone" class="rounded-lg" required>
                 </div>
                 <div class="input-group">
                     <label for="comment">Comentário</label>
-                    <textarea id="comment" name="comment" rows="4" class="rounded-lg"></textarea>
+                    <textarea id="comment" name="comment" rows="4" maxlength="300" class="rounded-lg" required></textarea>
+                    <div class="text-right text-sm text-gray-500 mt-1">
+                        <span id="char-count">0</span>/300
+                    </div>
                 </div>
-                <button type="submit" class="submit-btn mt-6 w-full">Enviar</button>
             </form>
         </div>
 
-        <button id="submit-btn-5-stars" class="submit-btn mt-6">Enviar</button>
+        <button id="submit-btn" class="submit-btn mt-6 hidden">Enviar</button>
+    </div>
+
+    <!-- Modal para 5 estrelas -->
+    <div id="thank-you-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <p class="modal-message">Uau! Ficamos muito felizes em saber que você teve uma experiência incrível! Seu feedback de 5 estrelas significa o mundo para nós.</p>
+            <p class="modal-message">Sua avaliação é muito valiosa. Gostaria de nos ajudar ainda mais e publicar no Google para que outras pessoas nos conheçam?</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
+                <button id="google-review-btn" class="modal-btn-google">Sim, publicar no Google!</button>
+                <button id="continue-btn" class="modal-btn">Não, obrigado</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -208,10 +290,17 @@
             const starInputs = document.querySelectorAll('input[name="rating"]');
             const feedbackFormContainer = document.getElementById('feedback-form');
             const feedbackText = document.getElementById('feedback-text');
-            const submitBtn5Stars = document.getElementById('submit-btn-5-stars');
+            const submitBtn = document.getElementById('submit-btn');
             const starsValue = document.getElementById('stars-value');
+            const commentTextarea = document.getElementById('comment');
+            const charCount = document.getElementById('char-count');
+            const phoneInput = document.getElementById('phone');
+            const thankYouModal = document.getElementById('thank-you-modal');
+            const googleReviewBtn = document.getElementById('google-review-btn');
+            const continueBtn = document.getElementById('continue-btn');
+            const contactForm = document.getElementById('contact-form');
 
-            let currentRating = 5;
+            let currentRating = 0;
 
             // Handle rating change
             starInputs.forEach(input => {
@@ -223,21 +312,74 @@
             });
 
             function updateUI() {
-                if (currentRating < 5) {
+                if (currentRating > 0) {
+                    submitBtn.classList.remove('hidden');
+                } else {
+                    submitBtn.classList.add('hidden');
+                }
+
+                if (currentRating === 5) {
+                    feedbackText.classList.add('hidden');
+                    feedbackFormContainer.classList.remove('active', 'fade-in');
+                } else if (currentRating > 0 && currentRating < 5) {
                     feedbackText.classList.remove('hidden');
                     feedbackText.classList.add('fade-in');
                     feedbackFormContainer.classList.add('active', 'fade-in');
-                    submitBtn5Stars.classList.add('hidden');
                 } else {
                     feedbackText.classList.add('hidden');
                     feedbackFormContainer.classList.remove('active', 'fade-in');
-                    submitBtn5Stars.classList.remove('hidden');
                 }
             }
 
-            // Handle 5-star button click
-            submitBtn5Stars.addEventListener('click', () => {
+            // Handle main submit button click
+            submitBtn.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevents default form submission
+                
+                if (currentRating === 5) {
+                    thankYouModal.classList.remove('hidden');
+                } else {
+                    // Trigger form submission for 1-4 stars
+                    if (contactForm.checkValidity()) {
+                        contactForm.submit();
+                    } else {
+                        // This will trigger the browser's native validation messages
+                        contactForm.reportValidity();
+                    }
+                }
+            });
+
+            // Handle modal button clicks
+            googleReviewBtn.addEventListener('click', () => {
+                // Substitua esta URL pelo link direto para a sua página de avaliação do Google
+                window.location.href = "https://www.google.com/search?q=Crocks+Frio+reviews"; 
+            });
+
+            continueBtn.addEventListener('click', () => {
                 window.location.href = "https://tr.ee/namLQs";
+            });
+
+            // Comment character count
+            commentTextarea.addEventListener('input', () => {
+                const count = commentTextarea.value.length;
+                charCount.textContent = count;
+            });
+
+            // Phone mask function
+            phoneInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 0) {
+                    value = '(' + value;
+                    if (value.length > 3) {
+                        value = value.slice(0, 3) + ') ' + value.slice(3);
+                    }
+                    if (value.length > 9) {
+                        value = value.slice(0, 9) + '-' + value.slice(9);
+                    }
+                    if (value.length > 15) {
+                        value = value.slice(0, 15);
+                    }
+                }
+                e.target.value = value;
             });
 
             // Initial UI update on page load
