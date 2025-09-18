@@ -213,23 +213,6 @@
             display: none;
         }
     </style>
-    <!-- Meta Pixel Code -->
-    <script>
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '2301053273664048');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=2301053273664048&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="rounded-3xl shadow-lg bg-white p-10 w-full max-w-md mx-auto">
@@ -320,36 +303,13 @@
             const phoneInput = document.getElementById('phone');
             const thankYouModal = document.getElementById('thank-you-modal');
             const googleReviewBtn = document.getElementById('google-review-btn');
-            const continueBtn = document = document.getElementById('continue-btn');
+            const continueBtn = document.getElementById('continue-btn');
             const contactForm = document.getElementById('contact-form');
             const finalModal = document.getElementById('final-modal');
             const finalContinueBtn = document.getElementById('final-continue-btn');
             const finalModalMessage = document.getElementById('final-modal-message');
 
             let currentRating = 0;
-            
-            // Defina o valor mínimo e máximo do seu ticket médio aqui
-            const ticketMin = 38.00;
-            const ticketMax = 152.00;
-
-            // Função para rastrear a compra no Facebook Pixel
-            function trackPurchaseEvent() {
-                try {
-                    if (typeof fbq === 'function') {
-                        // Gera um valor aleatório dentro do intervalo definido
-                        const randomValue = Math.random() * (ticketMax - ticketMin) + ticketMin;
-                        const formattedValue = randomValue.toFixed(2); // Formata para 2 casas decimais
-
-                        fbq('track', 'Purchase', {
-                            value: formattedValue,
-                            currency: 'BRL'
-                        });
-                        console.log('Evento de Compra (Purchase) enviado com valor aleatório:', formattedValue);
-                    }
-                } catch (error) {
-                    console.error('Erro ao rastrear o evento do Facebook Pixel:', error);
-                }
-            }
 
             // Handle rating change
             starInputs.forEach(input => {
@@ -383,11 +343,6 @@
             // Handle main submit button click
             submitBtn.addEventListener('click', async (event) => {
                 event.preventDefault(); // Prevents default form submission
-
-                // Dispara o evento de compra para a avaliação apenas se for 4 ou 5 estrelas
-                if (currentRating === 4 || currentRating === 5) {
-                    trackPurchaseEvent();
-                }
 
                 if (currentRating === 5) {
                     thankYouModal.classList.remove('hidden');
@@ -429,7 +384,7 @@
             // Handle modal button clicks
             googleReviewBtn.addEventListener('click', () => {
                 // Substitua esta URL pelo link direto para a sua página de avaliação do Google
-                window.location.href = "https://g.page/r/Cd_uHk-TtdWKEAE/review";  
+                window.location.href = "https://g.page/r/Cd_uHk-TtdWKEAE/review"; 
             });
 
             continueBtn.addEventListener('click', () => {
