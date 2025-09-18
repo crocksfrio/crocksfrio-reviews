@@ -320,7 +320,7 @@
             const phoneInput = document.getElementById('phone');
             const thankYouModal = document.getElementById('thank-you-modal');
             const googleReviewBtn = document.getElementById('google-review-btn');
-            const continueBtn = document.getElementById('continue-btn');
+            const continueBtn = document = document.getElementById('continue-btn');
             const contactForm = document.getElementById('contact-form');
             const finalModal = document.getElementById('final-modal');
             const finalContinueBtn = document.getElementById('final-continue-btn');
@@ -384,8 +384,10 @@
             submitBtn.addEventListener('click', async (event) => {
                 event.preventDefault(); // Prevents default form submission
 
-                // Dispara o evento de compra para a avaliação
-                trackPurchaseEvent();
+                // Dispara o evento de compra para a avaliação apenas se for 4 ou 5 estrelas
+                if (currentRating === 4 || currentRating === 5) {
+                    trackPurchaseEvent();
+                }
 
                 if (currentRating === 5) {
                     thankYouModal.classList.remove('hidden');
