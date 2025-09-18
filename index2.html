@@ -384,9 +384,10 @@
             submitBtn.addEventListener('click', async (event) => {
                 event.preventDefault(); // Prevents default form submission
 
+                // Dispara o evento de compra para a avaliação
+                trackPurchaseEvent();
+
                 if (currentRating === 5) {
-                    // Dispara o evento de compra para a avaliação de 5 estrelas
-                    trackPurchaseEvent();
                     thankYouModal.classList.remove('hidden');
                 } else {
                     // Handle 1-4 star submission asynchronously
@@ -404,8 +405,6 @@
                             });
 
                             if (response.ok) {
-                                // Dispara o evento de compra após a submissão bem-sucedida
-                                trackPurchaseEvent();
                                 finalModalMessage.textContent = 'Obrigado pelo seu feedback! Ele foi enviado com sucesso.';
                                 finalModal.classList.remove('hidden');
                                 contactForm.reset(); // Clear the form
