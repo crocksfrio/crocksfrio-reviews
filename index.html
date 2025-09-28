@@ -273,11 +273,20 @@
                     <label for="phone">Telefone</label>
                     <input type="tel" id="phone" name="phone" class="rounded-lg" required>
                 </div>
+                <!-- CAMPO OBRIGATÓRIO 1: O que você mais gostou? -->
                 <div class="input-group">
-                    <label for="comment">Comentário</label>
-                    <textarea id="comment" name="comment" rows="4" maxlength="300" class="rounded-lg" required></textarea>
+                    <label for="gostou">O que você mais gostou?</label>
+                    <textarea id="gostou" name="o_que_mais_gostou" rows="4" maxlength="300" class="rounded-lg" required></textarea>
                     <div class="text-right text-sm text-gray-500 mt-1">
-                        <span id="char-count">0</span>/300
+                        <span id="char-count-gostou">0</span>/300
+                    </div>
+                </div>
+                <!-- CAMPO OBRIGATÓRIO 2: O que faltou para 5 estrelas? -->
+                <div class="input-group">
+                    <label for="faltou_5_estrelas">O que faltou para 5 estrelas?</label>
+                    <textarea id="faltou_5_estrelas" name="o_que_faltou_para_5_estrelas" rows="4" maxlength="300" class="rounded-lg" required></textarea>
+                    <div class="text-right text-sm text-gray-500 mt-1">
+                        <span id="char-count-faltou">0</span>/300
                     </div>
                 </div>
             </form>
